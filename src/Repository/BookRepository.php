@@ -42,6 +42,59 @@ class BookRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function countPublishedBooks(): int
+    {
+        return $this->createQueryBuilder('b')
+            ->select('count(b.ref)')
+            ->where('b.published = true')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countNonPublishedBooks(): int
+    {
+        return $this->createQueryBuilder('b')
+            ->select('count(b.ref)')
+            ->where('b.published = false')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countBooksByCategory(string $category): int
+    {
+        $em = $this->getEntityManager();
+        $dql = "SELECT COUNT(b.ref) FROM App\Entity\Book b WHERE b.category = :category";
+        $query = $em->createQuery($dql)->setParameter('category', $category);
+
+        return $query->getSingleScalarResult();
+    }
+
+    public function findBooksPublishedBetween(\DateTime $startDate, \DateTime $endDate): array
+    {
+        $em = $this->getEntityManager();
+
+        $dql = 'SELECT b FROM App\Entity\Book b 
+            WHERE b.publicationDate >= :startDate 
+            AND b.publicationDate <= :endDate';
+
+        $query = $em->createQuery($dql)
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate);
+
+        return $query->getResult();
+    }
+
+    public function findBooksBefore2023ByAuthorsWithMoreThan35Books(): array
+    {
+        $qb = $this->createQueryBuilder('b')
+            ->join('b.author', 'a')
+            ->where('b.publicationDate < :year2023')
+            ->andWhere('a.nb_books > 35')
+            ->setParameter('year2023', new \DateTime('2023-01-01'));
+
+        return $qb->getQuery()->getResult();
+    }
+
 
 //    /**
 //     * @return Book[] Returns an array of Book objects

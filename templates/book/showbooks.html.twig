@@ -37,5 +37,71 @@
     {% endfor %}
 </table>
 <div>
+    <p>Published books: {{ publishedBooksCount }}</p>
+    <p>Non published books: {{ nonPublishedBooksCount }}</p>
+    <p>Science Fiction books: {{ scienceFictionCount }}</p>
+</div>
+<div>
+    <p>
+        Books between « 2014-01-01» et «2018-
+        12-31»:
+    </p>
+    <table border="3">
+        <tr>
+            <td><b>Title</b></td>
+            <td><b>Publication Date</b></td>
+            <td><b>Published</b></td>
+            <td><b>Category</b></td>
+            <td><b>Author</b></td>
+            <td><b>Actions</b></td>
+        </tr>
+        {% for book in booksByDate %}
+            <tr>
+                {#            <td> {{author.id}}</td>#}
+                <td>{{book.title}}</td>
+                <td>{{book.publicationDate|date()}}</td>
+                <td>{{book.published}}</td>
+                <td>{{book.category}}</td>
+                <td>{{book.author}}</td>
+                <td>
+                    <a href="{{path('showbook',{'ref':book.ref})}}">show</a>
+                    <a href="{{path('editbook',{'ref':book.ref})}}">edit</a>
+                    <a href="{{path('deletebook',{'ref':book.ref})}}">delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<div>
+    <p>
+        Books before 2023 by authors with more than 35 books
+    </p>
+    <table border="3">
+        <tr>
+            <td><b>Title</b></td>
+            <td><b>Publication Date</b></td>
+            <td><b>Published</b></td>
+            <td><b>Category</b></td>
+            <td><b>Author</b></td>
+            <td><b>Actions</b></td>
+        </tr>
+        {% for book in booksBefore %}
+            <tr>
+                {#            <td> {{author.id}}</td>#}
+                <td>{{book.title}}</td>
+                <td>{{book.publicationDate|date()}}</td>
+                <td>{{book.published}}</td>
+                <td>{{book.category}}</td>
+                <td>{{book.author}}</td>
+                <td>
+                    <a href="{{path('showbook',{'ref':book.ref})}}">show</a>
+                    <a href="{{path('editbook',{'ref':book.ref})}}">edit</a>
+                    <a href="{{path('deletebook',{'ref':book.ref})}}">delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<div>
     <a href="{{path('addbook')}}">Create new</a>
 </div>

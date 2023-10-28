@@ -47,6 +47,21 @@ class AuthorRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    public function findBooksPublishedBetween(\DateTime $startDate, \DateTime $endDate): array
+    {
+        $em = $this->getEntityManager();
+
+        $dql = 'SELECT b FROM App\Entity\Book b 
+            WHERE b.publicationDate >= :startDate 
+            AND b.publicationDate <= :endDate';
+
+        $query = $em->createQuery($dql)
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate);
+
+        return $query->getResult();
+    }
+
 
 
 //    /**

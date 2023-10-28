@@ -22,14 +22,7 @@ class BookController extends AbstractController
         ]);
     }
 
-    #[Route('/searchbook', name: 'searchbook')]
-    public function searchBookByRef($ref,ManagerRegistry $managerRegistry,BookRepository $bookRepository): Response
-    {
 
-        return $this->render('book/showbooks.html.twig', [
-            'book'=>$book
-        ]);
-    }
     #[Route('/showbooks', name: 'showbooks')]
     public function showBooks(Request $request, BookRepository $bookRepository): Response
     {
@@ -46,9 +39,23 @@ class BookController extends AbstractController
         }else{
             $books = $bookRepository->findOrderedByAuthor();
         }
+        $publishedBooksCount = $bookRepository->countPublishedBooks();
+        $nonPublishedBooksCount = $bookRepository->countNonPublishedBooks();
+        $scienceFictionCount = $bookRepository->countBooksByCategory('Science Fiction');
+
+
+        $startDate = new \DateTime('2014-01-01');
+        $endDate = new \DateTime('2018-12-31');
+        $booksByDate = $bookRepository->findBooksPublishedBetween($startDate, $endDate);
+        $booksBefore = $bookRepository->findBooksBefore2023ByAuthorsWithMoreThan35Books();
         return $this->renderForm('book/showbooks.html.twig', [
             'books' => $books,
-            'form' => $form
+            'form' => $form,
+            'publishedBooksCount' => $publishedBooksCount,
+            'nonPublishedBooksCount' => $nonPublishedBooksCount,
+            'scienceFictionCount' => $scienceFictionCount,
+            'booksByDate' =>$booksByDate,
+            'booksBefore' => $booksBefore,
         ]);
     }
 

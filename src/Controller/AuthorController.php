@@ -101,13 +101,10 @@ class AuthorController extends AbstractController
     public function deleteAuthorsWithNoBooks(ManagerRegistry $managerRegistry): Response
     {
         $em = $managerRegistry->getManager();
-
-        // Use DQL to delete authors with no books
         $query = $em->createQuery(
             'DELETE FROM App\Entity\Author a WHERE a.nb_books = 0'
         );
         $query->execute();
-
         return $this->redirectToRoute('showauthors');
     }
 
