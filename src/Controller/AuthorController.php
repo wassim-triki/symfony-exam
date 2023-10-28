@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Author;
+use App\Form\AuthorFilterType;
 use App\Form\AuthorType;
 use App\Repository\AuthorRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -23,14 +24,27 @@ class AuthorController extends AbstractController
 
 
     #[Route('/showauthors', name: 'showauthors')]
-    public function showAuthors(AuthorRepository $authorRepository): Response
+    public function showAuthors(AuthorRepository $authorRepository, Request $request): Response
     {
+        $form = $this->createForm(AuthorFilterType::class);
+        $form->handleRequest($request);
 
-        $authors = $authorRepository->findAll();
-        return $this->render('author/showauthors.html.twig', [
-            'authors' => $authors
+        $min = null;
+        $max = null;
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $min = $form->get('min')->getData();
+            $max = $form->get('max')->getData();
+        }
+
+        $authors = $authorRepository->findByBookCountRange($min, $max);
+
+        return $this->renderForm('author/showauthors.html.twig', [
+            'authors' => $authors,
+            'form' => $form
         ]);
     }
+
 
     #[Route('/addauthor', name: 'addauthor')]
     public function addAuthor(ManagerRegistry $managerRegistry, Request $req): Response
@@ -81,6 +95,22 @@ class AuthorController extends AbstractController
         $em->flush();
         return $this->redirectToRoute('showauthors');
     }
+
+
+    #[Route('/delete-authors-with-no-books', name: 'delete_authors_with_no_books')]
+    public function deleteAuthorsWithNoBooks(ManagerRegistry $managerRegistry): Response
+    {
+        $em = $managerRegistry->getManager();
+
+        // Use DQL to delete authors with no books
+        $query = $em->createQuery(
+            'DELETE FROM App\Entity\Author a WHERE a.nb_books = 0'
+        );
+        $query->execute();
+
+        return $this->redirectToRoute('showauthors');
+    }
+
 
 
 }

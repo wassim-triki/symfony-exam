@@ -21,6 +21,24 @@ class AuthorRepository extends ServiceEntityRepository
         parent::__construct($registry, Author::class);
     }
 
+    public function findByBookCountRange(?int $min, ?int $max): array
+    {
+        $qb = $this->createQueryBuilder('a');
+
+        if ($min !== null) {
+            $qb->andWhere('a.nb_books >= :min')
+                ->setParameter('min', $min);
+        }
+
+        if ($max !== null) {
+            $qb->andWhere('a.nb_books <= :max')
+                ->setParameter('max', $max);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+
 //    /**
 //     * @return Author[] Returns an array of Author objects
 //     */
