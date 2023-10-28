@@ -21,6 +21,16 @@ class BookRepository extends ServiceEntityRepository
         parent::__construct($registry, Book::class);
     }
 
+    public function findByRef(int $ref): array
+    {
+        return $this->createQueryBuilder('b')
+            ->where('b.ref = :ref')
+            ->setParameter('ref', $ref)
+            ->getQuery()
+            ->getResult();
+    }
+
+
 //    /**
 //     * @return Book[] Returns an array of Book objects
 //     */

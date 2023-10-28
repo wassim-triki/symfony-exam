@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Book;
 use App\Form\BookType;
+use App\Form\SearchBookType;
 use App\Repository\BookRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,15 +22,38 @@ class BookController extends AbstractController
         ]);
     }
 
-    #[Route('/showbooks', name: 'showbooks')]
-    public function showBooks(BookRepository $bookRepository): Response
+    #[Route('/searchbook', name: 'searchbook')]
+    public function searchBookByRef($ref,ManagerRegistry $managerRegistry,BookRepository $bookRepository): Response
     {
 
-        $books = $bookRepository->findAll();
         return $this->render('book/showbooks.html.twig', [
-            'books' => $books
+            'book'=>$book
         ]);
     }
+    #[Route('/showbooks', name: 'showbooks')]
+    public function showBooks(Request $request, BookRepository $bookRepository): Response
+    {
+        $form = $this->createForm(SearchBookType::class);
+        $form->handleRequest($request);
+
+        $books = [];
+        if ($form->isSubmitted() && $form->isValid()) {
+            $ref = $form->get('ref')->getData();
+            if ($ref) {
+                $books = $bookRepository->findByRef($ref);
+            } else {
+                $books = $bookRepository->findAll();
+            }
+        } else {
+            $books = $bookRepository->findAll();
+        }
+
+        return $this->renderForm('book/showbooks.html.twig', [
+            'books' => $books,
+            'form' => $form
+        ]);
+    }
+
 
     #[Route('/addbook', name: 'addbook')]
     public function addBook(ManagerRegistry $managerRegistry, Request $req): Response
