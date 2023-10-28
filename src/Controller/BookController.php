@@ -42,12 +42,9 @@ class BookController extends AbstractController
             if ($ref) {
                 $books = $bookRepository->findByRef($ref);
             } else {
-                $books = $bookRepository->findAll();
+                $books = $bookRepository->findOrderedByAuthor();
             }
-        } else {
-            $books = $bookRepository->findAll();
         }
-
         return $this->renderForm('book/showbooks.html.twig', [
             'books' => $books,
             'form' => $form

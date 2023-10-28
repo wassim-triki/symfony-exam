@@ -30,6 +30,18 @@ class BookRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return Book[]
+     */
+    public function findOrderedByAuthor(): array
+    {
+        return $this->createQueryBuilder('b')
+            ->join('b.author', 'a')
+            ->orderBy('a.username', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
 
 //    /**
 //     * @return Book[] Returns an array of Book objects
