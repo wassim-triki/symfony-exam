@@ -23,20 +23,30 @@ class AuthorRepository extends ServiceEntityRepository
 
     public function findByBookCountRange(?int $min, ?int $max): array
     {
-        $qb = $this->createQueryBuilder('a');
+        $em = $this->getEntityManager();
+        $dql = 'SELECT a FROM App\Entity\Author a WHERE 1=1';
 
         if ($min !== null) {
-            $qb->andWhere('a.nb_books >= :min')
-                ->setParameter('min', $min);
+            $dql .= ' AND a.nb_books >= :min';
         }
 
         if ($max !== null) {
-            $qb->andWhere('a.nb_books <= :max')
-                ->setParameter('max', $max);
+            $dql .= ' AND a.nb_books <= :max';
         }
 
-        return $qb->getQuery()->getResult();
+        $query = $em->createQuery($dql);
+
+        if ($min !== null) {
+            $query->setParameter('min', $min);
+        }
+
+        if ($max !== null) {
+            $query->setParameter('max', $max);
+        }
+
+        return $query->getResult();
     }
+
 
 
 //    /**
