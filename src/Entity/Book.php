@@ -31,7 +31,7 @@ class Book
     #[ORM\JoinColumn(nullable: false)]
     private ?Author $author = null;
 
-    #[ORM\ManyToMany(targetEntity: Reader::class, mappedBy: 'book')]
+    #[ORM\ManyToMany(targetEntity: Reader::class, mappedBy: 'books')]
     private Collection $readers;
 
     public function __construct()

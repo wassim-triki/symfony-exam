@@ -19,6 +19,9 @@ class Reader
     private ?string $username = null;
 
     #[ORM\ManyToMany(targetEntity: Book::class, inversedBy: 'readers')]
+    #[ORM\JoinTable(name: "reader_book")]
+    #[ORM\JoinColumn(name: "reader_id",referencedColumnName: "id")]
+    #[ORM\InverseJoinColumn(name: "book_ref",referencedColumnName: "ref")]
     private Collection $books;
 
     public function __construct()

@@ -1,0 +1,35 @@
+<style>
+    table{
+        margin: 0 auto;
+    }
+    td{
+        text-align: center;
+    }
+    div {
+        text-align: center;
+    }
+</style>
+<table border="3">
+    <tr>
+{#        <td>id</td>#}
+        <td><b>Username</b></td>
+        <td><b>Email</b></td>
+        <td><b>Number of books</b></td>
+        <td><b>Actions</b></td>
+    </tr>
+    {% for author in authors %}
+        <tr>
+{#            <td> {{author.id}}</td>#}
+            <td>{{author.username}}</td>
+            <td>{{author.email}}</td>
+            <td>{{author.getNbBooks()}}</td>
+            <td>
+                <a href="{{path('editauthor',{'id':author.id})}}">edit</a>
+                <a href="{{path('deletauthor',{'id':author.id})}}">delete</a>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+<div>
+    <a href="{{path('addauthor')}}">Create new</a>
+</div>
