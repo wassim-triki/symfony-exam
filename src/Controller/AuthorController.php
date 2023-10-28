@@ -33,7 +33,7 @@ class AuthorController extends AbstractController
     }
 
     #[Route('/addauthor', name: 'addauthor')]
-    public function addformauthor(ManagerRegistry $managerRegistry, Request $req): Response
+    public function addAuthor(ManagerRegistry $managerRegistry, Request $req): Response
     {
         $em = $managerRegistry->getManager();
         $author = new Author();

@@ -65,6 +65,10 @@ class Author
     {
         return $this->nb_books;
     }
+    public function __toString(){
+        return (string)$this->getUsername();
+    }
+
 
     public function setNbBooks(int $nb_books): static
     {

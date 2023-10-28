@@ -1,0 +1,40 @@
+<style>
+    table{
+        margin: 0 auto;
+    }
+    td{
+        text-align: center;
+    }
+    div {
+        text-align: center;
+    }
+</style>
+<table border="3">
+    <tr>
+        {#        <td>id</td>#}
+        <td><b>Title</b></td>
+        <td><b>Publication Date</b></td>
+        <td><b>Published</b></td>
+        <td><b>Category</b></td>
+        <td><b>Author</b></td>
+        <td><b>Actions</b></td>
+    </tr>
+    {% for book in books %}
+        <tr>
+            {#            <td> {{author.id}}</td>#}
+            <td>{{book.title}}</td>
+            <td>{{book.publicationDate|date()}}</td>
+            <td>{{book.published}}</td>
+            <td>{{book.category}}</td>
+            <td>{{book.author}}</td>
+            <td>
+                <a href="{{path('showbook',{'ref':book.ref})}}">show</a>
+                <a href="{{path('editbook',{'ref':book.ref})}}">edit</a>
+                <a href="{{path('deletebook',{'ref':book.ref})}}">delete</a>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+<div>
+    <a href="{{path('addbook')}}">Create new</a>
+</div>
